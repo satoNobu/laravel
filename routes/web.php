@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ServiceConTestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +16,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/service', function (Service $service) {
+    die(get_class($service));
+});
+
+Route::get('/func', [ServiceConTestController::class, 'func'])->name('func');
+Route::get('/func2', [ServiceConTestController::class, 'func2'])->name('func2');
+
+Route::get('/greeting', function () {
+    return 'Hello World!!!';
 });
