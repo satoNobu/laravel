@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\FormController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,3 +16,21 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::middleware("routeJudg")->group(function()
+{
+    Route::get('/one', function() {
+        return ('one');
+    })->name('route.one');
+    
+    Route::get('/two', function() {
+        return ('two');
+    })->name('route.two');
+
+    Route::get('/three', function() {
+        return ('three');
+    });
+});
+
+Route::resource('/form', FormController::class);
