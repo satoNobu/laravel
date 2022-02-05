@@ -15,6 +15,7 @@ class PostController extends Controller
     public function index()
     {
         //
+        abort(401);
         return view('post.index');
     }
 
