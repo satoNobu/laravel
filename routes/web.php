@@ -16,3 +16,18 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::middleware('log')->group(function() {
+    Route::get('/log', function () {
+        Log::emergency("emergency");
+        Log::alert("alert");
+        Log::critical("critical");
+        Log::error("error");
+        Log::warning("warning");
+        Log::notice("notice");
+        Log::info("info");
+        Log::debug("debug");
+        return "log_test";
+    });
+});
+
