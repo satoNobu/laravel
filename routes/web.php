@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +16,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/local', function () {
+    Storage::disk('local')->put('example.txt', 'Contents');
+    Log::info("Log::".asset('storage/example.txt'));
+    return 'local';
 });
