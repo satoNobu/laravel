@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+use App\Models\Blog;
 
 class BlogFactory extends Factory
 {
@@ -24,9 +25,17 @@ class BlogFactory extends Factory
              */
             // 'user_id' => User::factory()->create()->id,
 
-
+            'status' => Blog::OPEN,
             'title' => $this->faker->sentence(3),
             'body' => $this->faker->realText(100),
         ];
+    }
+    public function seeding()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'status' => $this->faker->biasedNumberBetween(0, 1, ['\Faker\Provider\Biased', 'linearHigh']),
+            ];
+        });
     }
 }
