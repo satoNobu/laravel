@@ -28,7 +28,8 @@ class BlogViewControllerTest extends TestCase
                 ->assertSee($blog3->user->name)
                 ->assertSee("（1件のコメント）")
                 ->assertSee("（3件のコメント）")
-                ->assertSee("（2件のコメント）");
+                ->assertSee("（2件のコメント）")
+                ->assertSeeInOrder([$blog2->title, $blog3->title, $blog1->title]);
 
         /**
          * タイトルの上書き更新も可能
