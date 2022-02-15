@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\User;
 
 class BlogFactory extends Factory
 {
@@ -14,6 +15,16 @@ class BlogFactory extends Factory
     public function definition()
     {
         return [
+            'user_id' => User::factory(),
+            // 'user_id' => fucntion() {
+            //     User::factory()->create()->id();
+            // },
+            /** 
+             * 非推奨: 不要なデータが作られる可能性があるため
+             */
+            // 'user_id' => User::factory()->create()->id,
+
+
             'title' => $this->faker->sentence(3),
             'body' => $this->faker->realText(100),
         ];
