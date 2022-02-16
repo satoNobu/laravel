@@ -48,8 +48,7 @@ class BlogViewControllerTest extends TestCase
     /** @test */
     function 非公開は表示しない() 
     {
-        Blog::factory()->create([
-            'status' => Blog::CLOSED,
+        Blog::factory()->closed()->create([
             'title' => 'ブログA'
         ]);
 
@@ -72,4 +71,24 @@ class BlogViewControllerTest extends TestCase
     //     dump($blog->toArray());
     //     dump(User::get()->toArray());
     // }
+
+    /** @test show */
+    function ブログの詳細画面_公開() 
+    {
+        $blog = Blog::factory()->create();
+        
+        $this->get('blogs/'.$blog->id)
+            ->assertOK()
+            ->assertSee($blog->title)
+            ->assertSee($blog->user->name);
+    }
+
+    /** @test show */
+    function ブログの詳細画面_非公開() 
+    {
+        $blog = Blog::factory()->closed()->create();
+
+        $this->get('blogs/'.$blog->id)
+            ->assertForbidden();
+    }
 }

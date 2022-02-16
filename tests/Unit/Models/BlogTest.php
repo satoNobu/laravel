@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Tests\TestCase;
 use App\Models\Blog;
 use App\Models\User;
+use GuzzleHttp\Promise\Create;
 
 class BlogTest extends TestCase
 {
@@ -43,7 +44,17 @@ class BlogTest extends TestCase
         $this->assertFalse($blogs->contains($blog1));
         $this->assertTrue($blogs->contains($blog2));
         $this->assertTrue($blogs->contains($blog3));
-
-
     }
+
+    /** @test */
+    public function 公開_非公開()
+    {
+        $blog = Blog::factory()->closed()->create();
+        // $blog = Blog::factory()->closed()->make();
+        $this->assertTrue($blog->isClosed());
+
+        $blog = Blog::factory()->create();
+        $this->assertFalse($blog->isClosed());
+    }
+ 
 }

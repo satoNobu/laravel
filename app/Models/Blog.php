@@ -28,4 +28,9 @@ class Blog extends Model
     {
         return $query->where('status', Blog::OPEN);
     }
+
+    public function isClosed()
+    {
+        return $this->status == self::CLOSED;
+    }
 }
