@@ -2,11 +2,13 @@
 
 namespace Tests\Feature\Controller;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\Blog;
 use App\Models\User;
+use App\Models\Comment;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class BlogViewControllerTest extends TestCase
 {
@@ -90,5 +92,58 @@ class BlogViewControllerTest extends TestCase
 
         $this->get('blogs/'.$blog->id)
             ->assertForbidden();
+    }
+
+    /** @test */
+    function メリークリスマスと表示()
+    {
+        $blog = Blog::factory()->create();
+        Carbon::setTestNow('2020-12-24');
+        $this->get('blogs/'.$blog->id)
+            ->assertOK()
+            ->assertDontSee('メリークリスマス');
+
+        Carbon::setTestNow('2020-12-25');
+        $this->get('blogs/'.$blog->id)
+            ->assertOK()
+            ->assertSee('メリークリスマス');
+    }
+
+    /** @test show */
+    function ブログの詳細画面_コメントが古い順に表示される() 
+    {
+        // $blog = Blog::factory()->create();
+
+        // Comment::factory()->create([
+        //     'created_at' => now()->sub('2 days'),
+        //     'name' => '太郎',
+        //     'blog_id' => $blog->id,
+        // ]);
+
+        // Comment::factory()->create([
+        //     'created_at' => now()->sub('3 days'),
+        //     'name' => '二郎',
+        //     'blog_id' => $blog->id,
+        // ]);
+
+        // Comment::factory()->create([
+        //     'created_at' => now()->sub('1 days'),
+        //     'name' => '三郎',
+        //     'blog_id' => $blog->id,
+        // ]);
+
+        $blog = Blog::factory()->withCommentsData([
+            ['created_at' => now()->sub('2 days'),'name' => '太郎'],
+            ['created_at' => now()->sub('3 days'),'name' => '二郎'],
+            ['created_at' => now()->sub('1 days'),'name' => '三郎'],
+        ])->create();
+
+        // dd($blog->comments->toarray());
+        
+        $this->get('blogs/'.$blog->id)
+            ->assertOK()
+            ->assertSee($blog->title)
+            ->assertSee($blog->user->name)
+            ->assertSeeInOrder(['二郎','太郎','三郎']);
     }
 }
