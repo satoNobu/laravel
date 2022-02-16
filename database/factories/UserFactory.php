@@ -36,4 +36,25 @@ class UserFactory extends Factory
             ];
         });
     }
+
+    public function valid()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'password' => 'test12345',
+            ];
+        });
+    }
+
+    public function validData($overrides = [])
+    {
+        return array_merge(
+            [
+                'name' => '太郎',
+                'email' => 'test@gmail.com',
+                'password' => 'test12345',
+            ],
+            $overrides
+        );
+    }
 }
