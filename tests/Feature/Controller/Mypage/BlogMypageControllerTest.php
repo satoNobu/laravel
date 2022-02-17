@@ -60,8 +60,12 @@ class BlogMypageControllerTest extends TestCase
         $user = $this->login();
         $validData = Blog::factory()->validData();
 
-        $this->post('mypage/blogs/create', $validData)
-            ->assertRedirect('mypage/blogs/edit/'.$user->id);
+        // $this->post('mypage/blogs/create', $validData)
+        //     ->assertRedirect('mypage/blogs/edit/'.$user->id);
+
+        $res = $this->post('mypage/blogs/create', $validData);
+        $blog = Blog::where($validData)->first()->id;
+        $res->assertRedirect('mypage/blogs/edit/'.$blog);
         
         $this->assertDatabaseHas('blogs', $validData);
     }
@@ -73,8 +77,9 @@ class BlogMypageControllerTest extends TestCase
         $validData = Blog::factory()->validData();
         unset($validData['status']);
 
-        $this->post('mypage/blogs/create', $validData)
-            ->assertRedirect('mypage/blogs/edit/'.$user->id);
+        $res = $this->post('mypage/blogs/create', $validData);
+        $blog = Blog::where($validData)->first()->id;
+        $res->assertRedirect('mypage/blogs/edit/'.$blog);
 
         $validData['status'] = 0;
         

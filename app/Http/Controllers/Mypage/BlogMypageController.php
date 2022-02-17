@@ -34,6 +34,6 @@ class BlogMypageController extends Controller
 
         $blog = auth()->user()->blogs()->create($data);
 
-        return redirect('mypage/blogs/edit/'.auth()->user()->id);
+        return redirect('mypage/blogs/edit/'.$blog->id);
     }
 }
