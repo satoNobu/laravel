@@ -119,4 +119,18 @@ class UserLoginControllerTest extends TestCase
         //     // ->assertSee('<h1>ログイン画面</h1>', false);
         //     ->assertSeeText('ログイン画面');
     }
+
+    /** @test */
+    function ログアウトできること()
+    {
+        $this->login();
+
+        $this->post('mypage/logout')
+            ->assertRedirect(route('login'));
+        
+        $this->get(route('login'))
+            ->assertSee('ログアウトしました');
+
+        $this->assertGuest();
+    }
 }
