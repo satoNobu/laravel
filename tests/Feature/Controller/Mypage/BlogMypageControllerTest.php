@@ -80,4 +80,24 @@ class BlogMypageControllerTest extends TestCase
         
         $this->assertDatabaseHas('blogs', $validData);
     }
+
+    /** @test */
+    function マイページ、ブログの入力チェック()
+    {
+        // $this->markTestIncomplete('まだ書いてない');
+        $url = 'mypage/blogs/create';
+
+        $this->login();
+
+        $this->post($url, ['title' => ''])
+            // ->dumpSession()
+            ->assertSessionHasErrors(['title' => 'タイトルは必ず指定してください。']);
+        $this->post($url, ['title' => str_repeat('a', 256)])
+            ->assertSessionHasErrors(['title' => 'タイトルは、255文字以下で指定してください。']);
+        $this->post($url, ['title' => str_repeat('a', 255)])
+            ->assertSessionDoesntHaveErrors(['title' => 'タイトルは、255文字以下で指定してください。']);
+
+        $this->post($url, ['body' => ''])
+            ->assertSessionHasErrors(['body' => '本文は必ず指定してください。']);
+    }
 }
