@@ -20,4 +20,16 @@ class BlogMypageController extends Controller
     {
         return view('mypage.blog.create');
     }
+
+    public function store(Request $request)
+    {
+        // $data = $request->all(['title', 'body', 'status']);
+
+        $data = $request->all(['title', 'body']);
+        $data['status'] = $request->boolean('status');
+
+        $blog = auth()->user()->blogs()->create($data);
+
+        return redirect('mypage/blogs/edit/'.$blog->id);
+    }
 }

@@ -14,6 +14,8 @@ class Blog extends Model
     const OPEN = 1;
     const CLOSED = 0;
 
+    protected $fillable = ['title', 'status', 'body'];
+
     public function user()
     {
         return $this->belongsTo(User::class);

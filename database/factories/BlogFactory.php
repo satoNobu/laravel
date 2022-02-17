@@ -60,4 +60,16 @@ class BlogFactory extends Factory
             }
         });
     }
+
+    public function validData($overrides = [])
+    {
+        return array_merge(
+            [
+                'title' => 'ブログのタイトル',
+                'body' => 'ブログの本文',
+                'status' => '1',
+            ],
+            $overrides
+        );
+    }
 }
