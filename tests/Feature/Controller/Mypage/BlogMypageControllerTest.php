@@ -15,7 +15,12 @@ class BlogMypageControllerTest extends TestCase
     /** @test */
     function 認証していない場合は、ログイン画面にリダイレクト()
     {
+        // ブログマイページ
         $this->get('mypage/blogs')
+            ->assertRedirect(route('login'));
+
+        // ログイン新規登録画面
+        $this->get('mypage/blogs/create')
             ->assertRedirect(route('login'));
     }
     /** @test index */
@@ -36,5 +41,13 @@ class BlogMypageControllerTest extends TestCase
             ->assertOk()
             ->assertDontSee($otherBlog->title)
             ->assertSee($myBlog->title);
+    }
+
+    /** @test */
+    function ブログの新規登録画面が開ける()
+    {
+        $this->login();
+        $this->get('mypage/blogs/create')
+            ->assertOK();
     }
 }
