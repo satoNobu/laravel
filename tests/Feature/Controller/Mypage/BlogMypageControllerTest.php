@@ -2,31 +2,39 @@
 
 namespace Tests\Feature\Controllers\Mypage;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use App\Models\Blog;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class BlogMypageControllerTest extends TestCase
 {
 
     use RefreshDatabase;
 
-    /** @test index */
-    function 認証している場合に限り、マイページを開ける()
+    /** @test */
+    function 認証していない場合は、ログイン画面にリダイレクト()
     {
-        // 認証していない場合
         $this->get('mypage/blogs')
-            ->assertRedirect('mypage/login');
-
+            ->assertRedirect(route('login'));
+    }
+    /** @test index */
+    function 認証している場合に、マイページでブログ一覧が表示される()
+    {
         // 認証済みの場合
         // $user = User::factory()->create();
 
         // $this->actingAs($user)->get('mypage/blogs')
         //     ->assertOk();
 
-        $this->login();
+        $user = $this->login();
+
+        $otherBlog = Blog::factory()->create();
+        $myBlog = Blog::factory()->create(['user_id' => $user]);
 
         $this->get('mypage/blogs')
-            ->assertOk();
+            ->assertOk()
+            ->assertDontSee($otherBlog->title)
+            ->assertSee($myBlog->title);
     }
 }
