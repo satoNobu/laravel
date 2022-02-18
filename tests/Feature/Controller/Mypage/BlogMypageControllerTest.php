@@ -125,7 +125,23 @@ class BlogMypageControllerTest extends TestCase
     /** @test update*/
     function 他ユーザーのブログは更新できない()
     {
-        $this->markTestIncomplete('未実装');
+        // $this->markTestIncomplete('未実装');
+        $validData = [
+            'title' => '新タイトル',
+            'body' => '新本文',
+            'status' => '1',
+        ];
+        $blog = Blog::factory()->create();;
+        $this->login();
+
+        $this->post(route('mypage.blog.update', $blog), $validData)
+            ->assertForbidden();
+
+        // form側で変更している可能性もあるのでおすすめではない。パスワードとか
+        // $this->assertDatabaseMissing('blogs', $validData);
+
+        $this->assertCount(1, Blog::all());
+        $this->assertEquals($blog->toArray(), Blog::first()->toArray());
     }
 
     /** @test delete*/
