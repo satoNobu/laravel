@@ -26,11 +26,11 @@ class BlogMypageController extends Controller
         // $data = $request->all(['title', 'body', 'status']);
 
         // $data = $request->all(['title', 'body']);
-        $data = $request->validate([
-            'title' => ['required', 'max:255'],
-            'body' => ['required'],
-        ]);
-        // $data = $this->validateInput();
+        // $data = $request->validate([
+        //     'title' => ['required', 'max:255'],
+        //     'body' => ['required'],
+        // ]);
+        $data = $this->validateInput();
         $data['status'] = $request->boolean('status');
 
         $blog = auth()->user()->blogs()->create($data);
@@ -52,24 +52,26 @@ class BlogMypageController extends Controller
     }
     
 
-    // public function update(Blog $blog, Request $request)
-    // {
-    //     // $data = $this->validateInput();
-    //     // $data['status'] = $request->boolean('status');
+    public function update(Blog $blog, Request $request)
+    {
+        dump('---');
+        $data = $this->validateInput();
+        dump($data);
+        $data['status'] = $request->boolean('status');
 
-    //     // $blog->update($data);
+        $blog->update($data);
 
-    //     return redirect(route('mypage.blog.edit', $blog))
-    //         ->with('status', 'ブログを更新しました');
+        return redirect(route('mypage.blog.edit', $blog))
+            ->with('status', 'ブログを更新しました');
             
         
-    // }
+    }
 
-    // private function validateInput()
-    // {
-    //     return request()->validate([
-    //         'title' => ['required', 'max:255'],
-    //         'body' => ['required'],
-    //     ]);
-    // }
+    private function validateInput()
+    {
+        return request()->validate([
+            'title' => ['required', 'max:255'],
+            'body' => ['required'],
+        ]);
+    }
 }

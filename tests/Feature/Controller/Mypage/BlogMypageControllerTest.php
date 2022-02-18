@@ -147,21 +147,42 @@ class BlogMypageControllerTest extends TestCase
     }
 
     /** @test edit*/
-    // function 自分のブログは更新できる()
-    // {
-    //     $blog = Blog::factory()->create();
-    //     $this->login($blog->user);
-    //     $blog = Blog::factory()->create();
+    function 自分のブログは更新できる()
+    {
+        $validData = [
+            'title' => '新タイトル',
+            'body' => '新本文',
+            'status' => '1',
+        ];
+        $blog = Blog::factory()->create();;
+        $this->login($blog->user);
 
-    //     $this->login($blog->user);
+        $this->post(route('mypage.blog.update', $blog), $validData)
+            ->assertRedirect(route('mypage.blog.edit', $blog));
 
-    //     dump(route('mypage.blog.update', $blog));
-    //     $this->post(route('mypage.blog.update', $blog))
-    //         ->assertRedirect(route('mypage.blog.edit', $blog));
+            dump(route('mypage.blog.edit', $blog));
+        $this->get(route('mypage.blog.edit', $blog))
+            ->assertSee('ブログを更新しました');
 
-    //         dump(route('mypage.blog.edit', $blog));
-    //     $this->get(route('mypage.blog.edit', $blog))
-    //         ->assertSee('ブログを更新しました');
+        $this->assertDatabaseHas('blogs', $validData);
 
-    // }
+        // 更新かはっきりしない。新規登録かもしれないので以下で確認
+        $this->assertCount(1, Blog::all());
+        $this->assertEquals(1, Blog::count());
+        
+        // データがまだ変わっていない状態なのでエラー。freshを使うとOK
+        // $this->assertEquals('新タイトル', $blog->title);
+        $this->assertEquals('新タイトル', $blog->fresh()->title);
+        $this->assertEquals('新本文', $blog->fresh()->body);
+
+        // 項目が多い時は、refresh()を使う
+        $blog->refresh();
+        $this->assertEquals('新本文', $blog->body);
+        // $this->assertEquals('新本文', $blog->body);
+        // $this->assertEquals('新本文', $blog->body);
+        // $this->assertEquals('新本文', $blog->body);
+        // $this->assertEquals('新本文', $blog->body);
+        // $this->assertEquals('新本文', $blog->body);
+        // $this->assertEquals('新本文', $blog->body);
+    }
 }
