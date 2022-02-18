@@ -7,12 +7,17 @@ use Tests\TestCase;
 use App\Models\Blog;
 use App\Models\User;
 use App\Models\Comment;
+use App\Http\Middleware\BlogShowLimit;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class BlogViewControllerTest extends TestCase
 {
     use RefreshDatabase;
+
+    // これすると、他のミドルウェアも無効化されるのでNG
+    // use WithoutMiddleware;
+
     /** @test */
     function TOPページを開く()
     {
@@ -77,6 +82,7 @@ class BlogViewControllerTest extends TestCase
     /** @test show */
     function ブログの詳細画面_公開() 
     {
+        $this->withoutMiddleware(BlogShowLimit::class);
         $blog = Blog::factory()->create();
         
         $this->get('blogs/'.$blog->id)
@@ -97,6 +103,7 @@ class BlogViewControllerTest extends TestCase
     /** @test */
     function メリークリスマスと表示()
     {
+        $this->withoutMiddleware(BlogShowLimit::class);
         $blog = Blog::factory()->create();
         Carbon::setTestNow('2020-12-24');
         $this->get('blogs/'.$blog->id)
@@ -112,6 +119,11 @@ class BlogViewControllerTest extends TestCase
     /** @test show */
     function ブログの詳細画面_コメントが古い順に表示される() 
     {
+
+        // ミドルウェアのクラス指定
+        $this->withoutMiddleware(BlogShowLimit::class);
+
+
         // $blog = Blog::factory()->create();
 
         // Comment::factory()->create([
