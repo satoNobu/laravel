@@ -4,6 +4,8 @@ namespace Tests\Feature\Controllers;
 
 // 頭にFacadesをつけることでFacades化が簡単にできる
 use Facades\Illuminate\Support\Str;
+use App\StrRandom;
+
 use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\Blog;
@@ -12,6 +14,7 @@ use App\Models\Comment;
 use App\Http\Middleware\BlogShowLimit;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+
 
 class BlogViewControllerTest extends TestCase
 {
@@ -168,9 +171,34 @@ class BlogViewControllerTest extends TestCase
 
        $blog = Blog::factory()->create();
 
-       Str::shouldReceive('random')
-           ->once()->with(10)->andReturn('HELLO_RAND');
+       // リアルファサードを使う場合
+    //    Str::shouldReceive('random')
+    //        ->once()->with(10)->andReturn('HELLO_RAND');
 
+        // 無名クラスを使用する方法
+        // $mock = new Class ()
+        // {
+        //     public function random(int $len)
+        //     {
+        //         if ($len !== 10) {
+        //             // return 'hoge';
+        //             throw new \Exception('引数違う');
+        //         }
+        //         return 'HELLO_RAND';
+        //     }
+        // };
+        // $this->app->instance(StrRandom::class, $mock);
+
+
+        // モックを使う方法
+        // $mock = \Mockery::mock(StrRandom::class);
+        // $mock->shouldReceive('random')->once()->with(10)->andReturn('HELLO_RAND');
+        // $this->app->instance(StrRandom::class, $mock);
+
+        // もっとシンプルにかける
+        $this->mock(StrRandom::class, function ($mock) {
+            $mock->shouldReceive('random')->once()->with(10)->andReturn('HELLO_RAND');
+        });
        $this->get('blogs/'.$blog->id)
            ->assertOk()
            ->assertSee('HELLO_RAND');

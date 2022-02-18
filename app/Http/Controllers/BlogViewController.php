@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use Facades\Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Blog;
+use App\StrRandom;
 
 class BlogViewController extends Controller
 {
@@ -31,7 +32,13 @@ class BlogViewController extends Controller
             abort(403);
         }
 
-        $random = Str::random(10);
+        //リフあるタイムファサード。use注目
+        // $random = Str::random(10);
+
+        // このやり方だとダメ
+        // $random = (new StrRandom)->random(10);
+        // appを通すことでサービスコンテナ経由で依存関係が作成される
+        $random = app(StrRandom::class)->random(10);  // resolve()
 
         return view('blog.show', compact('blog', 'random'));
     }
