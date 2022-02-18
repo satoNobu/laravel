@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Controllers;
 
+// 頭にFacadesをつけることでFacades化が簡単にできる
+use Facades\Illuminate\Support\Str;
 use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\Blog;
@@ -158,4 +160,19 @@ class BlogViewControllerTest extends TestCase
             ->assertSee($blog->user->name)
             ->assertSeeInOrder(['二郎','太郎','三郎']);
     }
+
+   /** @test show */
+   function ブログの詳細画面で、ランダムな文字列が10文字表示される()
+   {
+       $this->withoutMiddleware(BlogShowLimit::class);
+
+       $blog = Blog::factory()->create();
+
+       Str::shouldReceive('random')
+           ->once()->with(10)->andReturn('HELLO_RAND');
+
+       $this->get('blogs/'.$blog->id)
+           ->assertOk()
+           ->assertSee('HELLO_RAND');
+   }
 }

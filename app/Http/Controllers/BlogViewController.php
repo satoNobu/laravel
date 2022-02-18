@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+// 頭にFacadesをつけることでFacades化が簡単にできる
+use Facades\Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Blog;
 
@@ -28,6 +30,9 @@ class BlogViewController extends Controller
         if ($blog->isClosed()) {
             abort(403);
         }
-        return view('blog.show', compact('blog'));
+
+        $random = Str::random(10);
+
+        return view('blog.show', compact('blog', 'random'));
     }
 }
