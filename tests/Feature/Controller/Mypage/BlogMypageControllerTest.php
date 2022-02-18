@@ -31,6 +31,10 @@ class BlogMypageControllerTest extends TestCase
         // ログイン 更新
         $this->post('mypage/blogs/edit/1')
             ->assertRedirect(route('login'));
+
+        // 削除
+        $this->delete('mypage/blogs/delete/1')
+            ->assertRedirect(route('login'));
     }
     /** @test index */
     function 認証している場合に、マイページでブログ一覧が表示される()
@@ -147,7 +151,14 @@ class BlogMypageControllerTest extends TestCase
     /** @test delete*/
     function 他ユーザーのブログは削除できない()
     {
-        $this->markTestIncomplete('未実装');
+        $blog = Blog::factory()->create();
+
+        $this->login();
+
+        $this->delete('mypage/blogs/delete/'.$blog->id)
+            ->assertForbidden();
+
+        $this->assertCount(1, Blog::all());
     }
 
     /** @test edit*/
@@ -200,5 +211,19 @@ class BlogMypageControllerTest extends TestCase
         // $this->assertEquals('新本文', $blog->body);
         // $this->assertEquals('新本文', $blog->body);
         // $this->assertEquals('新本文', $blog->body);
+    }
+
+    /** @test destroy */
+    function 自分のブログは削除できる()
+    {
+        $blog = Blog::factory()->create();
+
+        $this->login($blog->user);
+
+        $this->delete('mypage/blogs/delete/'.$blog->id)
+            ->assertRedirect('mypage/blogs');
+
+        // $this->assertDatabaseMissing('blogs', ['id' => $blog->id]);  // $blog->only('id)
+        $this->assertDeleted($blog);
     }
 }
