@@ -25,6 +25,12 @@ class BlogMypageControllerTest extends TestCase
         // ログイン新規登録処理
         $this->post('mypage/blogs/create', [])
             ->assertRedirect(route('login'));
+        // ログイン 編集
+        $this->get('mypage/blogs/edit/1')
+            ->assertRedirect(route('login'));
+        // ログイン 更新
+        $this->post('mypage/blogs/edit/1')
+            ->assertRedirect(route('login'));
     }
     /** @test index */
     function 認証している場合に、マイページでブログ一覧が表示される()
@@ -105,4 +111,57 @@ class BlogMypageControllerTest extends TestCase
         $this->post($url, ['body' => ''])
             ->assertSessionHasErrors(['body' => '本文は必ず指定してください。']);
     }
+
+    /** @test edit*/
+    function 他ユーザーのブログ編集画面は開ない()
+    {
+        $blog = Blog::factory()->create();
+        $this->login();
+
+        $this->get('mypage/blogs/edit/'.$blog->id)
+            ->assertForbidden();
+    }
+
+    /** @test update*/
+    function 他ユーザーのブログは更新できない()
+    {
+        $this->markTestIncomplete('未実装');
+    }
+
+    /** @test delete*/
+    function 他ユーザーのブログは削除できない()
+    {
+        $this->markTestIncomplete('未実装');
+    }
+
+    /** @test edit*/
+    function 自分のブログ編集画面が開ける()
+    {
+        $blog = Blog::factory()->create();
+
+        $this->login($blog->user);
+        dump($blog->user->id);
+        $this->get(route('mypage.blog.edit', $blog))
+            ->assertOk();
+
+    }
+
+    /** @test edit*/
+    // function 自分のブログは更新できる()
+    // {
+    //     $blog = Blog::factory()->create();
+    //     $this->login($blog->user);
+    //     $blog = Blog::factory()->create();
+
+    //     $this->login($blog->user);
+
+    //     dump(route('mypage.blog.update', $blog));
+    //     $this->post(route('mypage.blog.update', $blog))
+    //         ->assertRedirect(route('mypage.blog.edit', $blog));
+
+    //         dump(route('mypage.blog.edit', $blog));
+    //     $this->get(route('mypage.blog.edit', $blog))
+    //         ->assertSee('ブログを更新しました');
+
+    // }
 }
