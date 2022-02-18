@@ -189,7 +189,6 @@ class BlogViewControllerTest extends TestCase
         // };
         // $this->app->instance(StrRandom::class, $mock);
 
-
         // モックを使う方法
         // $mock = \Mockery::mock(StrRandom::class);
         // $mock->shouldReceive('random')->once()->with(10)->andReturn('HELLO_RAND');
