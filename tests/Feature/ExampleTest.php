@@ -40,4 +40,18 @@ class ExampleTest extends TestCase
             ->assertCreated();
         $this->assertCount(1, Task::all());
     }
+
+    /** @test */
+    public function タスク更新()
+    {
+        $tasks = Task::factory(1)->create();
+        $task = [
+            'title' => 'update',
+        ];
+        $response = $this->put('api/tasks/'.$tasks->first()->id, $task)
+            ->assertOk();
+        $this->assertCount(1, Task::all());
+
+        $this->assertEquals('update', $tasks->fresh()->first()->title);
+    }
 }
