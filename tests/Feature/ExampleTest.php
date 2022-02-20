@@ -54,4 +54,14 @@ class ExampleTest extends TestCase
 
         $this->assertEquals('update', $tasks->fresh()->first()->title);
     }
+
+    /** @test */
+    public function タスク削除()
+    {
+        $tasks = Task::factory(1)->create();
+
+        $response = $this->delete('api/tasks/'.$tasks->first()->id)
+            ->assertOk();
+        $this->assertCount(0, Task::all());
+    }
 }
