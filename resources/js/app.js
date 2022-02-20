@@ -4,6 +4,7 @@ import TaskListComponent from "./components/TaskListComponent";
 import TaskShowComponent from "./components/TaskShowComponent";
 import TaskCreateComponent from "./components/TaskCreateComponent";
 import TaskEditComponent from "./components/TaskEditComponent";
+import TestComponent from "./components/TestComponent";
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -38,6 +39,12 @@ const router = new VueRouter({
             path: '/tasks/:taskId/edit',
             name: 'task.edit',
             component: TaskEditComponent,
+            props: true
+        },
+        {
+            path: '/test',
+            name: 'test',
+            component: TestComponent,
             props: true
         },
     ]

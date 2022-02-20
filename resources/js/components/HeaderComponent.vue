@@ -10,6 +10,9 @@
                     <router-link v-bind:to="{name: 'task.create'}">
                         <button class="btn btn-success">ADD</button>
                     </router-link>
+                    <router-link v-bind:to="{name: 'test'}">
+                        <button class="btn btn-success">Test</button>
+                    </router-link>
                 </div>
             </nav>
         </div>
