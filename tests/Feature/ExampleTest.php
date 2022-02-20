@@ -27,4 +27,17 @@ class ExampleTest extends TestCase
         // dump($response);
         $response->assertStatus(200);
     }
+
+    /** @test */
+    public function タスク登録()
+    {
+        $task = [
+            'title' => 'Test_Title',
+            'content' => 'Test_Content',
+            'person_in_charge' => 'Test_Person_in_charge',
+        ];
+        $response = $this->post('api/tasks/', $task)
+            ->assertCreated();
+        $this->assertCount(1, Task::all());
+    }
 }

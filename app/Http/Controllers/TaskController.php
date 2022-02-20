@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-    //
     public function index()
     {
         return Task::all();
@@ -15,5 +14,9 @@ class TaskController extends Controller
     public function show(Task $task)
     {
         return $task;
+    }
+    public function store(Request $request)
+    {
+         return Task::create($request->all());
     }
 }
